@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ライフログ - 設定</title>
+  <link rel="stylesheet" href="options.css">
+  <script src="../assets/chart.js"></script>
+</head>
+<body>
+  <div class="container">
+    <!-- ヘッダー -->
+    <header class="header">
+      <h1 class="title">ライフログ 設定</h1>
+      <p class="subtitle">拡張機能の動作をカスタマイズできます</p>
+    </header>
+
+    <!-- 設定フォーム -->
+    <main class="main-content">
+      <!-- 基本設定 -->
+      <section class="settings-section">
+        <h2 class="section-title">基本設定</h2>
+        
+        <div class="setting-item">
+          <label for="dataRetentionDays" class="setting-label">
+            データ保持期間
+          </label>
+          <div class="setting-control">
+            <input type="number" id="dataRetentionDays" min="1" max="3650" class="number-input">
+            <span class="unit">日</span>
+          </div>
+          <p class="setting-description">
+            古いデータを自動的に削除する期間を設定します（1-3650日）
+          </p>
+        </div>
+
+        <div class="setting-item">
+          <label class="setting-label">
+            通知設定
+          </label>
+          <div class="setting-control">
+            <label class="toggle">
+              <input type="checkbox" id="notifications">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <p class="setting-description">
+            新しいページを記録した際に通知を表示します
+          </p>
+        </div>
+
+        <div class="setting-item">
+          <label class="setting-label">
+            プライバシーモード
+          </label>
+          <div class="setting-control">
+            <label class="toggle">
+              <input type="checkbox" id="privacyMode">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <p class="setting-description">
+            プライバシーモード中は記録を停止します
+          </p>
+        </div>
+      </section>
+
+      <!-- 除外ドメイン設定 -->
+      <section class="settings-section">
+        <h2 class="section-title">除外ドメイン設定</h2>
+        <p class="section-description">
+          記録したくないドメインを指定できます
+        </p>
+        
+        <div class="excluded-domains">
+          <div class="domain-input-group">
+            <input type="text" id="domainInput" placeholder="例: google.com" class="domain-input">
+            <button id="addDomain" class="btn btn-primary">追加</button>
+          </div>
+          
+          <div id="domainList" class="domain-list">
+            <!-- 除外ドメインのリストがここに動的に追加される -->
+          </div>
+        </div>
+      </section>
+
+      <!-- データ管理 -->
+      <section class="settings-section">
+        <h2 class="section-title">データ管理</h2>
+        
+        <div class="data-actions">
+          <div class="action-group">
+            <h3>エクスポート</h3>
+            <div class="action-buttons">
+              <button id="exportJSON" class="btn btn-secondary">JSON形式</button>
+              <button id="exportCSV" class="btn btn-secondary">CSV形式</button>
+            </div>
+          </div>
+          
+          <div class="action-group">
+            <h3>インポート</h3>
+            <div class="action-buttons">
+              <input type="file" id="importFile" accept=".json,.csv" style="display: none;">
+              <button id="importData" class="btn btn-secondary">ファイルを選択</button>
+            </div>
+          </div>
+          
+          <div class="action-group">
+            <h3>データ削除</h3>
+            <div class="action-buttons">
+              <button id="clearOldData" class="btn btn-warning">古いデータを削除</button>
+              <button id="clearAllData" class="btn btn-danger">すべてのデータを削除</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 統計情報 -->
+      <section class="settings-section">
+        <h2 class="section-title">統計情報</h2>
+        
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-value" id="totalEntries">0</div>
+            <div class="stat-label">総記録数</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="uniqueDomains">0</div>
+            <div class="stat-label">ユニークドメイン</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="totalDuration">0</div>
+            <div class="stat-label">総滞在時間（分）</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="averageDuration">0</div>
+            <div class="stat-label">平均滞在時間（分）</div>
+          </div>
+        </div>
+        
+        <!-- 詳細グラフ -->
+        <div class="detailed-charts">
+          <div class="chart-row">
+            <div class="chart-container">
+              <h3 class="chart-title">時間帯別アクセス分布</h3>
+              <canvas id="hourlyChart" width="400" height="160"></canvas>
+            </div>
+            <div class="chart-container">
+              <h3 class="chart-title">ドメイン別アクセス分布</h3>
+              <canvas id="domainChart" width="400" height="160"></canvas>
+            </div>
+          </div>
+          <div class="chart-row">
+            <div class="chart-container">
+              <h3 class="chart-title">日別アクセス推移</h3>
+              <canvas id="dailyChart" width="400" height="160"></canvas>
+            </div>
+            <div class="chart-container">
+              <h3 class="chart-title">滞在時間分布</h3>
+              <canvas id="durationChart" width="400" height="160"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- フッター -->
+    <footer class="footer">
+      <button id="saveSettings" class="btn btn-primary">設定を保存</button>
+      <button id="resetSettings" class="btn btn-secondary">設定をリセット</button>
+    </footer>
+  </div>
+
+  <!-- 確認モーダル -->
+  <div id="confirmModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="confirmTitle">確認</h3>
+        <button class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p id="confirmMessage">この操作を実行しますか？</p>
+      </div>
+      <div class="modal-footer">
+        <button id="confirmYes" class="btn btn-danger">はい</button>
+        <button id="confirmNo" class="btn btn-secondary">いいえ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 成功メッセージ -->
+  <div id="successMessage" class="success-message">
+    <span id="successText">設定が保存されました</span>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html> 
